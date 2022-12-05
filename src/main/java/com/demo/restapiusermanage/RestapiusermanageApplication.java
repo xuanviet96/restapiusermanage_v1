@@ -8,6 +8,7 @@ public class RestapiusermanageApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RestapiusermanageApplication.class, args);
+		System.out.println("Hello");
 	}
 
 }
