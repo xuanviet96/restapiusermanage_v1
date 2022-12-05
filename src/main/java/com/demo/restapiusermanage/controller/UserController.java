@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @RestController
@@ -31,6 +32,7 @@ public class UserController {
     private UserService service;
 
     @GetMapping
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_EDITOR"})
     public ResponseEntity<Object> getAllUsers(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "sortField", required = false, defaultValue = "firstName") String sortField,
@@ -46,22 +48,26 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @RolesAllowed({"ROLE_CUSTOMER", "ROLE_EDITOR"})
     public ResponseEntity<Object> getUserById(@PathVariable("id") Long id) {
         return ResponseHandler.responseBuilder("success", HttpStatus.OK, service.findOne(id));
     }
 
     @PostMapping
+    @RolesAllowed("ROLE_EDITOR")
     public ResponseEntity<Object> saveUser(@Valid @RequestBody User user) {
 
         return ResponseHandler.responseBuilder("success", HttpStatus.CREATED, service.save(user));
     }
 
+    @RolesAllowed("ROLE_EDITOR")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable("id") Long id, @RequestBody User userDetails) {
         return ResponseHandler.responseBuilder("success", HttpStatus.OK, service.updateUser(userDetails, id));
     }
 
     @DeleteMapping("/{id}")
+    @RolesAllowed("ROLE_EDITOR")
     public ResponseEntity<String> deleteUserById(@PathVariable("id") Long id) {
         service.deleteUser(id);
         return new ResponseEntity<String>("User deleted successfully", HttpStatus.NO_CONTENT);
